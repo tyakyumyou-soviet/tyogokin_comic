@@ -1,0 +1,23 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1 class="page-title">検索結果</h1>
+    <p>検索ワード: "{{ query }}"</p>
+    
+    {% if results %}
+        <div class="card-container">
+            {% for comic in results %}
+                <div class="card">
+                    <a href="{% url 'comic_detail' comic.pk %}">
+                        <img src="{{ comic.thumbnail.url }}" alt="{{ comic.title }} サムネイル">
+                        <div class="card-title">{{ comic.title }}</div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>該当する作品は見つかりませんでした。</p>
+    {% endif %}
+</div>
+{% endblock %}

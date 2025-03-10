@@ -1,0 +1,33 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>スクレイピング結果のプレビュー</h1>
+{% if error %}
+  <p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div>
+    <label for="title">タイトル:</label>
+    <input type="text" name="title" id="title" required>
+  </div>
+  <div>
+    <p>画像を選択してください:</p>
+    <div style="display: flex; flex-wrap: wrap;">
+      {% for image in scraped_images %}
+      <div style="margin: 10px; text-align: center;">
+        <img src="data:image/jpeg;base64,{{ image.base64 }}" alt="{{ image.filename }}" width="100"><br>
+        <label>
+          <input type="checkbox" name="selected" value="{{ forloop.counter0 }}" checked> 選択
+        </label>
+        <p>{{ image.filename }}</p>
+        <!-- 隠しフィールドで画像データを渡す -->
+        <input type="hidden" name="image_{{ forloop.counter0 }}" value="{{ image.base64 }}">
+        <input type="hidden" name="filename_{{ forloop.counter0 }}" value="{{ image.filename }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <button type="submit" name="save">保存</button>
+</form>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>{{ comic.title }}</h1>
+<img src="{{ comic.thumbnail.url }}" alt="{{ comic.title }}" width="300">
+
+<!-- タグ表示セクション -->
+{% if comic.tags.all %}
+  <div>
+    <h3>タグ</h3>
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      {% for tag in comic.tags.all %}
+        <li style="display: inline; margin-right: 10px;">
+          <a href="{% url 'search_comics' %}?q={{ tag.name|urlencode }}" 
+             style="color: #f0f0f0; text-decoration: none; background-color: #2a2a2a; padding: 4px 8px; border-radius: 4px;">
+            {{ tag.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% if user.is_authenticated %}
+<div style="margin-top: 20px;">
+  <button type="button" style="padding: 8px 16px; cursor: pointer;"
+          onclick="openModal()">マイリストに追加する</button>
+</div>
+{% endif %}
+
+<h2>詳細画像</h2>
+<div class="detail-images">
+    {% for image in comic.images.all %}
+        <img src="{{ image.image.url }}" alt="Image {{ forloop.counter }}">
+    {% endfor %}
+</div>
+
+{% if user.is_superuser %}
+<div style="margin-top:20px;">
+    <a href="{% url 'comic_edit' comic.pk %}">
+        <button type="button">編集</button>
+    </a>
+    <a href="{% url 'comic_delete' comic.pk %}">
+        <button type="button">削除</button>
+    </a>
+</div>
+{% endif %}
+
+<!-- モーダルウィンドウ（初期状態は非表示） -->
+<div id="listModal" style="
+     display: none;
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: rgba(0,0,0,0.5);
+     z-index: 9999;
+     align-items: center;
+     justify-content: center;
+">
+  <!-- モーダルコンテンツ -->
+  <div style="
+    background-color: #2a2a2a;
+    width: 300px;
+    padding: 20px;
+    border-radius: 6px;
+    position: relative;
+    color: #f0f0f0;
+  ">
+    <h2 style="margin-top: 0;">マイリストを選択</h2>
+    <form method="POST" action="{% url 'add_comic_to_multiple_lists' comic.pk %}">
+      {% csrf_token %}
+      {% if userlists %}
+        <p>追加・解除したいマイリストをチェックしてください</p>
+        <div style="
+             margin-bottom: 10px; 
+             max-height: 150px; 
+             overflow-y: auto;
+             border: 1px solid #444;
+             padding: 8px;
+        ">
+          {% for ul in userlists %}
+            <label style="display: block; margin-bottom: 5px;">
+              <input type="checkbox" name="userlist_ids" value="{{ ul.id }}"
+                     {% if ul.id in list_ids_already_registered %}checked{% endif %}>
+              {{ ul.name }}
+            </label>
+          {% endfor %}
+        </div>
+        <div style="text-align: right;">
+          <button type="button" style="margin-right: 10px;" onclick="closeModal()">キャンセル</button>
+          <button type="submit">保存</button>
+        </div>
+      {% else %}
+        <p>マイリストがありません。<a href="{% url 'userlist_list' %}">マイリスト管理</a></p>
+        <div style="text-align: right;">
+          <button type="button" onclick="closeModal()">閉じる</button>
+        </div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<script>
+function openModal() {
+  document.getElementById('listModal').style.display = 'flex';
+}
+function closeModal() {
+  document.getElementById('listModal').style.display = 'none';
+}
+</script>
+{% endblock %}

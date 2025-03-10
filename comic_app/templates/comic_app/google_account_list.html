@@ -1,0 +1,21 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>Googleアカウント管理</h1>
+<ul style="list-style: none; padding: 0;">
+    {% for account in accounts %}
+    <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+        <span style="flex: 1;">{{ account.email }}</span>
+        <a href="{% url 'remove_google_account' account.id %}" class="btn btn-danger">削除</a>
+    </li>
+    {% empty %}
+    <li>登録されたGoogleアカウントはありません。</li>
+    {% endfor %}
+</ul>
+
+<div style="margin-top: 20px;">
+    <button onclick="window.location.href='{% url 'google_auth' %}'" class="btn btn-primary">
+        新しいGoogleアカウントを追加
+    </button>
+</div>
+{% endblock %}

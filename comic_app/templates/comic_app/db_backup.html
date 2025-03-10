@@ -1,0 +1,17 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>DBバックアップ</h1>
+
+<p>これまでのバックアップ回数: {{ backup_count }}</p>
+{% if last_backup %}
+  <p>最後のバックアップ日時: {{ last_backup.backup_date }}</p>
+{% else %}
+  <p>バックアップはまだ行われていません。</p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">DBバックアップを実行する</button>
+</form>
+{% endblock %}

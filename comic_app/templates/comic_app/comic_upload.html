@@ -1,0 +1,40 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>作品アップロード</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">アップロード</button>
+</form>
+{% endblock %}
+
+<script>
+// detail_images の input でファイルが選択されたら、プレビューを表示する処理
+document.getElementById('id_detail_images').addEventListener('change', function(event) {
+  const previewContainer = document.getElementById('preview-container');
+  previewContainer.innerHTML = '';  // 前のプレビューをクリア
+  const files = event.target.files;
+  for(let i = 0; i < files.length; i++){
+    const file = files[i];
+    const fileReader = new FileReader();
+    fileReader.onload = function(e) {
+      // 各ファイルのプレビューとチェックボックスを生成
+      const previewDiv = document.createElement('div');
+      previewDiv.style.display = 'inline-block';
+      previewDiv.style.margin = '10px';
+      previewDiv.style.textAlign = 'center';
+      previewDiv.innerHTML = `
+        <img src="${e.target.result}" alt="${file.name}" width="100"><br>
+        <label>
+          <input type="checkbox" checked name="upload_file_${i}" value="${i}">
+          アップロードする
+        </label>
+        <p>${file.name}</p>
+      `;
+      previewContainer.appendChild(previewDiv);
+    };
+    fileReader.readAsDataURL(file);
+  }
+});
+</script>

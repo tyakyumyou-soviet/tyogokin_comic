@@ -1,0 +1,243 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>ファイルマネージャUI</h1>
+
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<!-- タイトル入力 -->
+<div>
+  <label for="comic_title">タイトル:</label>
+  <input type="text" id="comic_title" name="title" form="finalForm" required>
+</div>
+
+<!-- タグ選択セクション（チェックボックス形式） -->
+<div>
+  <h2>タグ選択</h2>
+  <div>
+    {% for tag in tags %}
+      <label style="display:inline-block; margin-right: 10px;">
+        <input type="checkbox" name="tags" value="{{ tag.id }}">
+        {{ tag.name }}
+      </label>
+    {% endfor %}
+  </div>
+  <p>※ 複数選択可能です。新しいタグはタグ管理ページで作成してください。</p>
+</div>
+
+<!-- ローカルファイルアップロードセクション -->
+<div>
+  <h2>ローカルファイルアップロード</h2>
+  <input type="file" id="localFiles" multiple accept="image/*">
+  <button type="button" onclick="addLocalFiles()">追加</button>
+</div>
+
+<!-- スクレイピングセクション -->
+<div>
+  <h2>スクレイピング</h2>
+  <form id="scrapeForm">
+    {% csrf_token %}
+    {{ scrape_form.as_p }}
+    <button type="button" onclick="scrapeImages()">スクレイピング実行</button>
+  </form>
+</div>
+
+<!-- ファイルマネージャUI表示領域 -->
+<h2>ファイル一覧（ドラッグ＆ドロップで順番変更可能）</h2>
+<div id="fileManager" style="border: 1px solid #ccc; padding: 10px; min-height: 100px;">
+  <!-- 各画像アイテムがここに追加される -->
+</div>
+
+<br>
+
+<!-- 完全アップロードフォーム -->
+<form id="finalForm" method="post" action="{% url 'file_manager' %}">
+  {% csrf_token %}
+  <input type="hidden" id="image_count" name="image_count" value="0">
+  <div id="hiddenInputs"></div>
+  <button type="submit">完全にアップロードする</button>
+</form>
+
+<!-- ローディングオーバーレイ（スクレイピング中に表示） -->
+<div id="loadingOverlay" style="display: none;">
+  <div class="spinner"></div>
+</div>
+
+<!-- SortableJSをCDNから読み込み（ドラッグ＆ドロップ用） -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+  // ファイルマネージャUIで扱う画像を保持する配列
+  let fileManagerItems = [];
+
+  // ローカルファイルアップロード処理
+  function addLocalFiles() {
+    const input = document.getElementById('localFiles');
+    const files = input.files;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        addFileItem(e.target.result, file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+    // 入力リセット
+    input.value = "";
+  }
+
+  // 画像アイテムをファイルマネージャUIに追加
+  function addFileItem(dataUrl, filename) {
+    // dataUrlは "data:image/xxx;base64,..." の形式なので、後で分割して保存
+    const base64Data = dataUrl.split(",")[1];
+    const item = {
+      base64: base64Data,
+      filename: filename,
+      selected: true
+    };
+    fileManagerItems.push(item);
+    renderFileManager();
+  }
+
+  // ファイルマネージャUIを描画する関数
+  function renderFileManager() {
+    const container = document.getElementById('fileManager');
+    container.innerHTML = '';
+    fileManagerItems.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.setAttribute('data-index', index);
+      div.style.border = "1px solid #ddd";
+      div.style.margin = "5px";
+      div.style.padding = "5px";
+      div.style.display = "inline-block";
+      div.style.textAlign = "center";
+      // チェックボックス（選択のオンオフ）
+      const checkbox = document.createElement('input');
+      checkbox.type = "checkbox";
+      checkbox.checked = item.selected;
+      checkbox.addEventListener('change', function() {
+        item.selected = checkbox.checked;
+      });
+      div.appendChild(checkbox);
+      // 画像プレビュー
+      const img = document.createElement('img');
+      img.src = "data:image/jpeg;base64," + item.base64;
+      img.style.width = "100px";
+      img.style.display = "block";
+      div.appendChild(img);
+      // ファイル名表示
+      const p = document.createElement('p');
+      p.textContent = item.filename;
+      div.appendChild(p);
+      container.appendChild(div);
+    });
+    updateHiddenInputs();
+  }
+
+  // 完全アップロード用フォームに、画像データをhidden inputでセットする
+  function updateHiddenInputs() {
+    const hiddenContainer = document.getElementById('hiddenInputs');
+    hiddenContainer.innerHTML = '';
+    document.getElementById('image_count').value = fileManagerItems.length;
+    fileManagerItems.forEach((item, index) => {
+      const inputImage = document.createElement('input');
+      inputImage.type = "hidden";
+      inputImage.name = "image_" + index;
+      inputImage.value = item.base64;
+      hiddenContainer.appendChild(inputImage);
+      
+      const inputFilename = document.createElement('input');
+      inputFilename.type = "hidden";
+      inputFilename.name = "filename_" + index;
+      inputFilename.value = item.filename;
+      hiddenContainer.appendChild(inputFilename);
+      
+      if(item.selected) {
+        const inputSelected = document.createElement('input');
+        inputSelected.type = "hidden";
+        inputSelected.name = "selected_" + index;
+        inputSelected.value = "on";
+        hiddenContainer.appendChild(inputSelected);
+      }
+    });
+  }
+
+  // SortableJSでドラッグ＆ドロップによる順序変更を実装
+  new Sortable(document.getElementById('fileManager'), {
+    animation: 150,
+    onEnd: function(evt) {
+      // 新しい順序に合わせて配列を再構築
+      const newOrder = [];
+      const items = document.getElementById('fileManager').children;
+      for (let i = 0; i < items.length; i++) {
+        const idx = items[i].getAttribute('data-index');
+        newOrder.push(fileManagerItems[idx]);
+      }
+      fileManagerItems = newOrder;
+      renderFileManager();
+    }
+  });
+
+  // スクレイピング処理（AJAXでスクレイピングAPIにリクエスト）
+  function scrapeImages() {
+    // スクレイピング開始時にローディングオーバーレイ表示
+    document.getElementById("loadingOverlay").style.display = "block";
+    const form = document.getElementById('scrapeForm');
+    const formData = new FormData(form);
+    fetch("{% url 'scrape_api' %}", {
+      method: "POST",
+      headers: {
+        'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      // スクレイピング処理完了後にオーバーレイを非表示にする
+      document.getElementById("loadingOverlay").style.display = "none";
+      if(data.error){
+        alert(data.error);
+      } else {
+        data.scraped_images.forEach(image => {
+          addFileItem("data:image/jpeg;base64," + image.base64, image.filename);
+        });
+      }
+    })
+    .catch(error => {
+      console.error("スクレイピングエラー:", error);
+      document.getElementById("loadingOverlay").style.display = "none";
+    });
+  }
+</script>
+
+<!-- ローディングオーバーレイとスピナー用のスタイル -->
+<style>
+  #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      display: none;
+  }
+  .spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3f51b5;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+  }
+  @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+</style>
+{% endblock %}

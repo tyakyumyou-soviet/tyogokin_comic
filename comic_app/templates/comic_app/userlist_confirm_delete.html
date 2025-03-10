@@ -1,0 +1,10 @@
+{% extends "comic_app/base.html" %}
+{% block content %}
+<h1>リストの削除確認</h1>
+<p>本当に「{{ object.name }}」を削除しますか？</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">削除</button>
+  <a href="{% url 'userlist_detail' object.pk %}"><button type="button">キャンセル</button></a>
+</form>
+{% endblock %}

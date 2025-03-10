@@ -1,0 +1,81 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>Comic 一覧</h1>
+
+<!-- 本日のおすすめ -->
+{% if today_recommended %}
+<div class="today-recommended">
+    <h2>本日のおすすめ</h2>
+    <div class="card-container center">
+        {% for comic in today_recommended %}
+            <div class="card">
+                <a href="{% url 'comic_detail' comic.pk %}">
+                    <img src="{{ comic.thumbnail.url }}" alt="{{ comic.title }} サムネイル">
+                    <div class="card-title">{{ comic.title }}</div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- あなたへのおすすめ -->
+{% if recommended_comics %}
+<h2>あなたへのおすすめ</h2>
+<div class="card-container">
+    {% for rcomic in recommended_comics %}
+    <div class="card">
+        <a href="{% url 'comic_detail' rcomic.pk %}">
+            <img src="{{ rcomic.thumbnail.url }}" alt="{{ rcomic.title }}" />
+            <div class="card-title">{{ rcomic.title }}</div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- 全作品一覧 -->
+<h2>全作品一覧</h2>
+
+<!-- ページネーション（下部） -->
+{% block pagination_bottom %}
+{% if is_paginated %}
+<div class="pagination">
+    {% if page_obj.paginator.num_pages > 5 %}
+        {% if page_obj.number > 1 %}
+            <a href="?page={{ page_obj.number|add:"-1" }}">{{ page_obj.number|add:"-1" }}</a>
+        {% endif %}
+        <strong>{{ page_obj.number }}</strong>
+        {% if page_obj.number < page_obj.paginator.num_pages %}
+            <a href="?page={{ page_obj.number|add:"1" }}">{{ page_obj.number|add:"1" }}</a>
+        {% endif %}
+        {% if page_obj.number|add:"2" <= page_obj.paginator.num_pages %}
+            <a href="?page={{ page_obj.number|add:"2" }}">{{ page_obj.number|add:"2" }}</a>
+        {% endif %}
+    {% else %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <strong>{{ num }}</strong>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+<div class="card-container">
+    {% for comic in comics %}
+    <div class="card">
+        <a href="{% url 'comic_detail' comic.pk %}">
+            <img src="{{ comic.thumbnail.url }}" alt="{{ comic.title }} サムネイル" />
+            <div class="card-title">{{ comic.title }}</div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

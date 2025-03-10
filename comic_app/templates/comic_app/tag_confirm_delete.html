@@ -1,0 +1,10 @@
+{% extends "comic_app/base.html" %}
+{% block content %}
+<h1>タグ削除の確認</h1>
+<p>タグ「{{ object.name }}」を削除してもよろしいですか？</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">削除する</button>
+    <a href="{% url 'tag_list' %}" class="btn btn-secondary">キャンセル</a>
+</form>
+{% endblock %}

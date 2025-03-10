@@ -1,0 +1,8 @@
+{% extends "comic_app/base.html" %}
+{% block content %}
+<h1>アップロードエラー</h1>
+<p>Google Drive の容量が不足しています。</p>
+<p>{{ error_message }}</p>
+<p>作品のアップロードを中止しました。不要な作品を削除するか、別のGoogleアカウントを追加してください。</p>
+<a href="{% url 'file_manager' %}">ファイルマネージャに戻る</a>
+{% endblock %}

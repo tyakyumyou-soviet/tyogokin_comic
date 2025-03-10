@@ -1,0 +1,510 @@
+/* --- Global Reset & Dark Theme --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* --- Page Wrapper for Sticky Footer --- */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.page-wrapper main {
+    flex: 1;
+}
+
+/* --- Container & Page Title (Optional) --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.page-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- Buttons & Anchor Button Styles --- */
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+a.btn {
+    display: inline-block;
+    padding: 10px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+a.btn.btn-primary,
+button.btn.btn-primary,
+input[type="submit"].btn.btn-primary {
+    background-color: #3f51b5;
+    color: #fff;
+}
+a.btn.btn-primary:hover,
+button.btn.btn-primary:hover,
+input[type="submit"].btn.btn-primary:hover {
+    background-color: #334296;
+    transform: scale(1.05);
+}
+a.btn.btn-danger,
+button.btn.btn-danger,
+input[type="submit"].btn.btn-danger {
+    background-color: #e74c3c;
+    color: #fff;
+}
+a.btn.btn-danger:hover,
+button.btn.btn-danger:hover,
+input[type="submit"].btn.btn-danger:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+a.btn.btn-secondary,
+button.btn.btn-secondary,
+input[type="submit"].btn.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+a.btn.btn-secondary:hover,
+button.btn.btn-secondary:hover,
+input[type="submit"].btn.btn-secondary:hover {
+    background-color: #545b62;
+    transform: scale(1.05);
+}
+
+/* --- File Input (Modern Style) --- */
+input[type="file"] {
+    display: inline-block;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 8px;
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+input[type="file"]:hover {
+    background-color: #444;
+    transform: scale(1.02);
+}
+
+/* --- Form Elements (Modern Style) --- */
+input[type="text"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 10px;
+    color: #f0f0f0;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input[type="text"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #3f51b5;
+    box-shadow: 0 0 8px rgba(63,81,181,0.6);
+}
+
+/* --- Header & Navigation --- */
+.header {
+    background-color: #2e2e2e;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+.site-title a {
+    text-decoration: none;
+    color: #f0f0f0;
+    font-size: 24px;
+    font-weight: bold;
+}
+.nav-toggle {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #f0f0f0;
+}
+.navbar {
+    display: flex;
+}
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+.navbar ul li a {
+    text-decoration: none;
+    color: #f0f0f0;
+    font-size: 16px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.navbar ul li a:hover {
+    color: #3f51b5;
+    transform: scale(1.1);
+}
+
+/* --- Search Container --- */
+.search-container {
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    background-color: #2e2e2e;
+    border-top: 1px solid #444;
+}
+.search-container form {
+    display: inline-flex;
+    width: calc(100% - 20px);
+    max-width: 400px;
+    margin: 0 auto;
+}
+.search-container input[type="text"] {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #444;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    font-size: 18px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.search-container input[type="text"]:focus {
+    border-color: #3f51b5;
+    box-shadow: 0 0 8px rgba(63,81,181,0.6);
+}
+.btn.btn-search {
+    background-color: #3f51b5;
+    color: #fff;
+    border: 1px solid #444;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.btn.btn-search:hover {
+    background-color: #334296;
+    transform: scale(1.05);
+}
+
+/* --- Main Content --- */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
+/* --- Recommended Sections --- */
+.today-recommended {
+    background-color: #2e2e2e;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+.today-recommended h2 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    border-bottom: 2px solid #444;
+    padding-bottom: 5px;
+}
+
+/* --- Card Layout --- */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+}
+.card-container.center {
+    justify-content: center;
+}
+.card a {
+    text-decoration: none;
+    color: inherit;
+}
+.card a:visited {
+    color: inherit;
+}
+.card {
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    text-align: center;
+    transition: transform 0.2s;
+    width: 100%;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card img {
+    width: 100%;
+    border-radius: 4px;
+}
+.card-title {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f0f0f0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* --- Pagination --- */
+.pagination {
+    text-align: center;
+    margin: 30px 0;
+}
+.pagination a,
+.pagination strong {
+    display: inline-block;
+    margin: 0 2px;
+    padding: 14px 24px;
+    background-color: transparent;
+    border: 2px solid #3f51b5;
+    color: #3f51b5;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.pagination a:hover {
+    background-color: rgba(63,81,181,0.2);
+    transform: scale(1.05);
+}
+.pagination strong {
+    background-color: #3f51b5;
+    color: #fff;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: #2e2e2e;
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+}
+
+/* --- Overlay for Navigation --- */
+#nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 900;
+}
+
+/* --- Responsive Styles --- */
+
+/* スマホ状態（max-width: 768px） */
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: block;
+    }
+    .navbar {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100%;
+        background-color: #333;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 60px;
+        transition: right 0.3s ease;
+        z-index: 1000;
+        overflow-y: auto;
+    }
+    .navbar.open {
+        right: 0;
+    }
+    /* スマホ用閉じるボタン：右側、少し下に配置 */
+    .nav-close {
+        position: absolute;
+        top: 40px;
+        right: 20px;
+        font-size: 28px;
+        cursor: pointer;
+        color: #f0f0f0;
+    }
+    .navbar ul {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 40px;
+        width: 100%;
+        text-align: center;
+    }
+    .navbar ul li {
+        margin: 10px 0;
+        width: 100%;
+    }
+    .header {
+        justify-content: space-between;
+    }
+    /* Card layout: Gridで2列表示 */
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        justify-content: center;
+    }
+    .card {
+        width: auto;
+    }
+}
+
+/* PC状態（min-width: 769px） */
+@media (min-width: 769px) {
+    /* 全作品一覧：Gridで5列表示 */
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        justify-content: center;
+    }
+    .card {
+        width: auto;
+    }
+    /* 本日のおすすめセクション：中央寄せ & 固定サイズ(240px) */
+    .today-recommended .card-container {
+        display: flex !important;
+        justify-content: center;
+        gap: 12px;
+    }
+    .today-recommended .card-container .card {
+        width: 240px;
+    }
+    /* PC状態ではナビゲーションの閉じるボタンは非表示 */
+    .nav-close {
+        display: none;
+    }
+    /* オーバーレイ非表示 */
+    #nav-overlay {
+        display: none;
+    }
+}
+
+/* --- Detail Images Grid --- */
+.detail-images {
+    display: grid;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .detail-images {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 769px) {
+    .detail-images {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        /* 各行で順番を入れ替える */
+        grid-auto-flow: dense;
+    }
+    /* 1行目: 1番目 -> 2列, 2番目 -> 1列 */
+    .detail-images > :nth-child(2n-1) {
+        grid-column: 2;
+    }
+    .detail-images > :nth-child(2n) {
+        grid-column: 1;
+    }
+}
+.detail-images img {
+    width: 100%;
+    height: auto;
+}
+
+
+/* --- フォーム用コンテナ --- */
+.form-container {
+    background-color: #2a2a2a;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 40px auto;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.form-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #f0f0f0;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    font-size: 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #3f51b5;
+    box-shadow: 0 0 8px rgba(63,81,181,0.6);
+}
+
+.form-container p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-container a {
+    color: #3f51b5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.form-container a:hover {
+    color: #334296;
+}

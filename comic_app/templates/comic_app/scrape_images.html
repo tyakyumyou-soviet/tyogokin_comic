@@ -1,0 +1,13 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>画像スクレイピング</h1>
+{% if error %}
+  <p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" name="scrape">スクレイピング実行</button>
+</form>
+{% endblock %}

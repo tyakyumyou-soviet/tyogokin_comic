@@ -1,0 +1,25 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>マイリスト</h1>
+
+
+<a href="{% url 'userlist_create' %}" class="btn btn-primary">新しいマイリストを作成</a>
+
+<div class="card-container">
+  {% for list in userlists %}
+    <div class="card">
+      <a href="{% url 'userlist_detail' list.pk %}">
+        <img src="{{ list.display_thumbnail_url }}" alt="{{ list.name }} サムネイル">
+        <div class="card-title">{{ list.name }}</div>
+      </a>
+    </div>
+  {% empty %}
+  <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    まだマイリストは作成されていません。
+</p>
+
+
+  {% endfor %}
+</div>
+{% endblock %}

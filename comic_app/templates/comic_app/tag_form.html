@@ -1,0 +1,9 @@
+{% extends "comic_app/base.html" %}
+{% block content %}
+<h1>新しいタグの作成</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">作成</button>
+</form>
+{% endblock %}

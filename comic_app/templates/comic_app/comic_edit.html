@@ -1,0 +1,10 @@
+{% extends "comic_app/base.html" %}
+{% block content %}
+<h1>作品編集</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">保存</button>
+    <a href="{% url 'comic_detail' object.pk %}"><button type="button">キャンセル</button></a>
+</form>
+{% endblock %}

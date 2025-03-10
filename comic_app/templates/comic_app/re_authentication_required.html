@@ -1,0 +1,7 @@
+{% extends "comic_app/base.html" %}
+{% block content %}
+<h1>認証情報が無効です</h1>
+<p>{{ error_message }}</p>
+<p>お手数ですが、該当のGoogleアカウントを再度認証してください。</p>
+<a href="{% url 'google_account_list' %}">Googleアカウント管理ページへ</a>
+{% endblock %}

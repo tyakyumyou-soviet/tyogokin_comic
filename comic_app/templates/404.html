@@ -1,0 +1,8 @@
+{% extends "comic_app/base.html" %}
+{% block content %}
+<div class="error-page" style="padding: 50px; text-align: center;">
+  <h1 style="font-size: 48px; margin-bottom: 20px;">404 - ページが見つかりません</h1>
+  <p style="font-size: 20px; margin-bottom: 30px;">申し訳ありません。お探しのページは存在しません。</p>
+  <p><a href="{% url 'comic_list' %}" style="font-size: 18px; color: #3f51b5; text-decoration: underline;">ホームに戻る</a></p>
+</div>
+{% endblock %}

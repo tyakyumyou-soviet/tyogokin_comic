@@ -1,0 +1,29 @@
+{% extends "comic_app/base.html" %}
+{% load static %}
+{% block content %}
+<h1>{{ userlist.name }}</h1>
+<p>{{ userlist.description }}</p>
+
+
+
+
+<div class="card-container">
+  {% for comic in userlist.comics.all %}
+    <div class="card">
+      <a href="{% url 'comic_detail' comic.pk %}">
+        <img src="{{ comic.thumbnail.url }}" alt="{{ comic.title }} サムネイル">
+        <div class="card-title">{{ comic.title }}</div>
+      </a>
+    </div>
+  {% empty %}
+    <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        このリストには作品がありません。
+    </p>
+  {% endfor %}
+</div>
+
+<div class="list-actions">
+    <a href="{% url 'userlist_edit' userlist.pk %}" class="btn btn-primary">編集</a>
+    <a href="{% url 'userlist_delete' userlist.pk %}" class="btn btn-danger">削除</a>
+</div>
+{% endblock %}
