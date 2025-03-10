@@ -7,7 +7,7 @@
   <p style="color:red;">{{ error }}</p>
 {% endif %}
 
-<!-- タイトル入力 -->
+<!-- タイトル入力（form="finalForm" で最終アップロードフォームに紐付け） -->
 <div>
   <label for="comic_title">タイトル:</label>
   <input type="text" id="comic_title" name="title" form="finalForm" required>
@@ -19,7 +19,8 @@
   <div>
     {% for tag in tags %}
       <label style="display:inline-block; margin-right: 10px;">
-        <input type="checkbox" name="tags" value="{{ tag.id }}">
+        <!-- form="finalForm" を追加 -->
+        <input type="checkbox" name="tags" value="{{ tag.id }}" form="finalForm">
         {{ tag.name }}
       </label>
     {% endfor %}
