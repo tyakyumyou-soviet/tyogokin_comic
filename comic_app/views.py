@@ -59,16 +59,27 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def search_comics(request):
     query = request.GET.get('q', '')
     results = Comic.objects.none()
-    
+
     if query:
         # 半角・全角スペースで区切って、各キーワードを抽出
         keywords = re.split(r'[\s　]+', query.strip())
-        # OR検索条件を組み立て
-        q_objects = Q()
+
+        # 初期状態では全Comicを候補とする
+        temp_results = Comic.objects.all()
+        
+        # それぞれのキーワードでフィルタ (AND)
         for word in keywords:
-            if word:
-                q_objects |= Q(title__icontains=word) | Q(tags__name__icontains=word)
-        results = Comic.objects.filter(q_objects).distinct()
+            word = word.strip()
+            if not word:
+                continue  # 空文字はスキップ
+
+            # 「タイトルに word が含まれる or タグ名に word が含まれる」Comic を抽出
+            temp_results = temp_results.filter(
+                Q(title__icontains=word) | Q(tags__name__icontains=word)
+            ).distinct()
+        
+        # 最終的な temp_results が AND検索の結果
+        results = temp_results
 
     # **新しい順** (id 降順など。必要なら別の日時フィールドでsortしてもOK)
     results = results.order_by('-id')
