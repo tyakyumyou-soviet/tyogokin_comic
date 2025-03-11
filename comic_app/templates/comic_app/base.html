@@ -89,33 +89,39 @@
         {% block content %}{% endblock %}
     </main>
 
-     <!-- ページネーション（下部） -->
-     {% block pagination_bottom %}
-     {% if is_paginated %}
-     <div class="pagination">
-         {% if page_obj.paginator.num_pages > 5 %}
-             {% if page_obj.number > 1 %}
-                 <a href="?page={{ page_obj.number|add:"-1" }}">{{ page_obj.number|add:"-1" }}</a>
-             {% endif %}
-             <strong>{{ page_obj.number }}</strong>
-             {% if page_obj.number < page_obj.paginator.num_pages %}
-                 <a href="?page={{ page_obj.number|add:"1" }}">{{ page_obj.number|add:"1" }}</a>
-             {% endif %}
-             {% if page_obj.number|add:"2" <= page_obj.paginator.num_pages %}
-                 <a href="?page={{ page_obj.number|add:"2" }}">{{ page_obj.number|add:"2" }}</a>
-             {% endif %}
-         {% else %}
-             {% for num in page_obj.paginator.page_range %}
-                 {% if num == page_obj.number %}
-                     <strong>{{ num }}</strong>
-                 {% else %}
-                     <a href="?page={{ num }}">{{ num }}</a>
-                 {% endif %}
-             {% endfor %}
-         {% endif %}
-     </div>
-     {% endif %}
- {% endblock %}
+    <!-- ページネーション（下部） -->
+    {% block pagination_bottom %}
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.paginator.num_pages > 5 %}
+            {% if page_obj.number > 1 %}
+                <a href="?page={{ page_obj.number|add:"-1" }}{% if query %}&q={{ query }}{% endif %}">
+                    {{ page_obj.number|add:"-1" }}
+                </a>
+            {% endif %}
+            <strong>{{ page_obj.number }}</strong>
+            {% if page_obj.number < page_obj.paginator.num_pages %}
+                <a href="?page={{ page_obj.number|add:"1" }}{% if query %}&q={{ query }}{% endif %}">
+                    {{ page_obj.number|add:"1" }}
+                </a>
+            {% endif %}
+            {% if page_obj.number|add:"2" <= page_obj.paginator.num_pages %}
+                <a href="?page={{ page_obj.number|add:"2" }}{% if query %}&q={{ query }}{% endif %}">
+                    {{ page_obj.number|add:"2" }}
+                </a>
+            {% endif %}
+        {% else %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <strong>{{ num }}</strong>
+                {% else %}
+                    <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endblock %}
 </div><!-- /.page-wrapper -->
 
 <!-- フッター -->
@@ -158,7 +164,6 @@
     });
 </script>
 
-
 <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -171,7 +176,7 @@
           });
       });
     }
-  </script>
+</script>
 
 <!-- ローディングオーバーレイのCSS -->
 <style>

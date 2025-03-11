@@ -59,18 +59,22 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def search_comics(request):
     query = request.GET.get('q', '')
     results = Comic.objects.none()
+    
     if query:
-        # 半角・全角スペースで区切って、各キーワードを抽出する
+        # 半角・全角スペースで区切って、各キーワードを抽出
         keywords = re.split(r'[\s　]+', query.strip())
-        # 複数のキーワードのOR検索条件を構築
+        # OR検索条件を組み立て
         q_objects = Q()
         for word in keywords:
-            if word:  # 空文字は無視
+            if word:
                 q_objects |= Q(title__icontains=word) | Q(tags__name__icontains=word)
         results = Comic.objects.filter(q_objects).distinct()
 
-    # ページネーションを実装（1ページあたり5件の表示例）
-    paginator = Paginator(results, 20)
+    # **新しい順** (id 降順など。必要なら別の日時フィールドでsortしてもOK)
+    results = results.order_by('-id')
+
+    # ページネーション
+    paginator = Paginator(results, 20)  # 1ページあたり5件表示
     page = request.GET.get('page')
     try:
         paginated_results = paginator.page(page)
@@ -81,8 +85,8 @@ def search_comics(request):
 
     context = {
         'query': query,
-        'results': paginated_results,
-        'is_paginated': paginator.num_pages > 1,
+        'results': paginated_results,  # ページネートされた結果
+        'is_paginated': paginated_results.has_other_pages(),
         'page_obj': paginated_results,
     }
     return render(request, 'comic_app/search_results.html', context)
