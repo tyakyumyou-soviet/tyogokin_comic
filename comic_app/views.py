@@ -53,6 +53,8 @@ import random
 
 from django.db.models import Q
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def search_comics(request):
     query = request.GET.get('q', '')
@@ -66,9 +68,22 @@ def search_comics(request):
             if word:  # 空文字は無視
                 q_objects |= Q(title__icontains=word) | Q(tags__name__icontains=word)
         results = Comic.objects.filter(q_objects).distinct()
+
+    # ページネーションを実装（1ページあたり5件の表示例）
+    paginator = Paginator(results, 20)
+    page = request.GET.get('page')
+    try:
+        paginated_results = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_results = paginator.page(1)
+    except EmptyPage:
+        paginated_results = paginator.page(paginator.num_pages)
+
     context = {
         'query': query,
-        'results': results
+        'results': paginated_results,
+        'is_paginated': paginator.num_pages > 1,
+        'page_obj': paginated_results,
     }
     return render(request, 'comic_app/search_results.html', context)
 
@@ -80,7 +95,7 @@ class ComicListView(LoginRequiredMixin,ListView):
 
     ordering = ['-id']
 
-    paginate_by = 5  # 1ページあたり20件表示
+    paginate_by = 10  # 1ページあたり10件表示
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
