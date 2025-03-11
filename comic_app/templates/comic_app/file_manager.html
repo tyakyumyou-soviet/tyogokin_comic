@@ -72,20 +72,29 @@
   // ファイルマネージャUIで扱う画像を保持する配列
   let fileManagerItems = [];
 
-  // ローカルファイルアップロード処理
+  // ローカルファイルアップロード処理 (ファイル名昇順に読み込む)
   function addLocalFiles() {
     const input = document.getElementById('localFiles');
-    const files = input.files;
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    // FileListを配列に変換し、ファイル名の昇順でソート
+    let filesArray = Array.from(input.files);
+    filesArray.sort((a, b) => a.name.localeCompare(b.name));
+
+    // 順番にFileReaderを実行していく（同期的に読む方法）
+    let index = 0;
+    function readNextFile() {
+      if (index >= filesArray.length) {
+        input.value = "";
+        return;
+      }
+      const file = filesArray[index++];
       const reader = new FileReader();
       reader.onload = function(e) {
         addFileItem(e.target.result, file.name);
+        readNextFile(); // 次のファイルを読み込む
       };
       reader.readAsDataURL(file);
     }
-    // 入力リセット
-    input.value = "";
+    readNextFile();
   }
 
   // 画像アイテムをファイルマネージャUIに追加
