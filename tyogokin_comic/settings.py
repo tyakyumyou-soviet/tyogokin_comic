@@ -168,7 +168,9 @@ LOGGING = {
 LOGIN_REDIRECT_URL = '/'
 
 # 例えば 50MB に設定（必要に応じて調整してください）
-DATA_UPLOAD_MAX_MEMORY_SIZE = 1073741824  # 1024 * 1024 * 1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5368709120  # 1024 * 1024 * 1024
+# 例: 5000 に設定（必要に応じて調整）
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
 
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
