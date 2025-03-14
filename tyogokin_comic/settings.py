@@ -141,9 +141,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-GOOGLE_OAUTH_REDIRECT_URI = "http://127.0.0.1:8000/oauth2callback/"  # 開発環境用
 
-#GOOGLE_OAUTH_REDIRECT_URI = "https://TyakyumyouTyogokinComic.pythonanywhere.com/oauth2callback/" #本番用環境
+
+
+
+#GOOGLE_OAUTH_REDIRECT_URI = "http://127.0.0.1:8000/oauth2callback/"  # 開発環境用
+GOOGLE_OAUTH_REDIRECT_URI = "https://TyakyumyouTyogokinComic.pythonanywhere.com/oauth2callback/" #本番用環境
+
+
+
+
+
 
 
 
