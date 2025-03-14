@@ -474,6 +474,7 @@ class UserListListView(LoginRequiredMixin, ListView):
     model = UserList
     template_name = 'comic_app/userlist_list.html'
     context_object_name = 'userlists'
+    paginate_by = 20  # 1ページあたり10件表示
 
     def get_queryset(self):
         #return UserList.objects.filter(user=self.request.user)
@@ -483,9 +484,25 @@ class UserListDetailView(LoginRequiredMixin, DetailView):
     model = UserList
     template_name = 'comic_app/userlist_detail.html'
     context_object_name = 'userlist'
-    
+
     def get_queryset(self):
         return UserList.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # 現在のUserListに紐づく作品を取得（新しい順に並べる）
+        comics = self.object.comics.all().order_by('-id')
+        paginator = Paginator(comics, 20)  # 1ページあたり10件表示
+        page = self.request.GET.get('page')
+        try:
+            comics_page = paginator.page(page)
+        except PageNotAnInteger:
+            comics_page = paginator.page(1)
+        except EmptyPage:
+            comics_page = paginator.page(paginator.num_pages)
+        context['comics_page'] = comics_page
+        context['is_paginated'] = paginator.num_pages > 1
+        return context
 
 class UserListCreateView(LoginRequiredMixin, CreateView):
     model = UserList
