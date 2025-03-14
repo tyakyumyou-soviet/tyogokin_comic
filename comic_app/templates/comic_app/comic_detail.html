@@ -4,6 +4,12 @@
 <h1>{{ comic.title }}</h1>
 <img src="{{ comic.thumbnail.url }}" alt="{{ comic.title }}" width="300">
 
+<!-- 画像数表示（タグ表示の上に配置、スタイルを強調） --><br>
+
+<div style="font-size: 15px; font-weight: bold; text-align: center; margin: 10px 0; display: inline-block; color: #fff; background-color: #444; padding: 8px 12px; border-radius: 4px;">
+    全 {{ comic.images.count }} ページ
+</div>
+
 <!-- タグ表示セクション -->
 {% if comic.tags.all %}
   <div>
