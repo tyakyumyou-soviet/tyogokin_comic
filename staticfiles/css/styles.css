@@ -328,7 +328,7 @@ footer {
 /* --- Responsive Styles --- */
 
 /* スマホ状態（max-width: 768px） */
-@media (max-width: 768px) {
+@media (max-width: 908px) {
     .nav-toggle {
         display: block;
     }
@@ -385,7 +385,7 @@ footer {
 }
 
 /* PC状態（min-width: 769px） */
-@media (min-width: 769px) {
+@media (min-width: 908px) {
     /* 全作品一覧：Gridで5列表示 */
     .card-container {
         display: grid;
