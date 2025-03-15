@@ -48,14 +48,15 @@
                     <li><a href="{% url 'userlist_list' %}">マイリスト</a></li>
                 {% endif %}
                 {% if user.is_superuser %}
-                    <li><a href="{% url 'file_manager' %}">ファイルマネージャUI</a></li>
-                    <li><a href="{% url 'google_account_list' %}">Googleアカウント管理</a></li>
+                    <li><a href="{% url 'file_manager' %}">ファイルマネージャ</a></li>
+                    <li><a href="{% url 'google_account_list' %}">Google垢管理</a></li>
                     <li><a href="{% url 'db_backup' %}">DBバックアップ</a></li>
                     <li><a href="{% url 'tag_list' %}">タグ管理</a></li>
+                    <li><a href="{% url 'signup' %}">新垢登録</a></li>
                 {% endif %}
                 {% if user.is_authenticated %}
                     {% if user.is_superuser and total_free_storage %}
-                        <li class="storage-info">残りストレージ容量: {{ total_free_storage }}</li>
+                        <li class="storage-info">残容量: {{ total_free_storage }}</li>
                     {% endif %}
                     <li>
                         <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:inline;">

@@ -413,13 +413,7 @@ footer {
     #nav-overlay {
         display: none;
     }
-    /* ▼ ここから追加 ▼ */
-    /* スマホ時の pagination の色を #444 に変更 */
-    .pagination a,
-    .pagination strong {
-        border-color: #444 !important;
-        color: #444 !important;
-    }
+
 }
 
 /* --- Detail Images Grid --- */
