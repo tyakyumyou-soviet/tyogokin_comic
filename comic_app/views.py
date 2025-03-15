@@ -114,9 +114,10 @@ class ComicListView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # 今日のおすすめ (既存ロジック)
         today = date.today()
         cache_key = f"today_recommended_{today}"
-        # キャッシュから今日のおすすめのComic IDリストを取得（リスト形式）
         recommended_ids = cache.get(cache_key)
         if recommended_ids:
             today_recommended = Comic.objects.filter(pk__in=recommended_ids)
@@ -136,10 +137,13 @@ class ComicListView(LoginRequiredMixin,ListView):
                 today_recommended = []
         context['today_recommended'] = today_recommended
 
+        # 「あなたへのおすすめ」: 新ロジックの recommend_for_user
         if self.request.user.is_authenticated:
-            context['recommended_comics'] = recommend_for_user(self.request.user)
+            # 例: 10件だけ返す
+            context['recommended_comics'] = recommend_for_user(self.request.user, limit=10)
         else:
             context['recommended_comics'] = None
+
         return context
 
 
