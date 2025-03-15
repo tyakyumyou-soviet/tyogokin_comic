@@ -36,11 +36,9 @@ def recommend_for_user(user, limit=10):
         # 作品に付与されているタグを取得
         for t in hist.comic.tags.all():
             tag_weights[t.id] = tag_weights.get(t.id, 0) + count
-
     if not tag_weights:
         # タグ嗜好が計算できない場合は何も返せない
         return Comic.objects.none()
-
     # 3. ユーザーがよく見るタグを含む作品を抽出（distinct）
     userhistory_sub = UserHistory.objects.filter(user=user, comic=OuterRef('pk')).values('view_count')[:1]
     candidate_comics_qs = (
@@ -50,37 +48,30 @@ def recommend_for_user(user, limit=10):
             user_view_count=Coalesce(Subquery(userhistory_sub), Value(0), output_field=IntegerField())
         )
     )
-
     # 4. Python側で 「タグ類似度 + user_view_count」 を組み合わせてスコア計算
     #    DB から取り出した結果を一旦リスト化し、各作品にスコアを付与
     candidate_comics = list(candidate_comics_qs)
-
     # 先にユーザータグベクトルのノルムを計算 (コサイン類似度に使う)
     user_norm_sq = 0
     for w in tag_weights.values():
         user_norm_sq += w * w
     user_norm = math.sqrt(user_norm_sq) if user_norm_sq else 0.0
-
     def compute_score(comic):
         """1つの作品に対するスコアを計算する"""
         # (a) 作品のタグベクトル -> 該当タグがあれば1, なければ0
         comic_tag_ids = list(comic.tags.values_list('id', flat=True))
         if not comic_tag_ids:
             return 0.0
-
         # (b) コサイン類似度のためのドット積
         dot = 0
         for t_id, weight in tag_weights.items():
             if t_id in comic_tag_ids:
                 dot += weight  # 作品側は重み=1とみなし
-
         comic_norm = math.sqrt(len(comic_tag_ids))  # 作品タグベクトルのノルム(単純にタグ数)
-
         if user_norm == 0 or comic_norm == 0:
             similarity = 0.0
         else:
             similarity = dot / (user_norm * comic_norm)
-
         # (c) ユーザーの閲覧回数を反映
         #     例: final_score = similarity / (1 + view_count)
         view_count = comic.user_view_count

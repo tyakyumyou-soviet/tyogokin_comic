@@ -1,5 +1,24 @@
 {% extends "comic_app/base.html" %}
 {% block content %}
+<!-- スマホ向けレスポンシブ調整 -->
+<style>
+@media (max-width: 768px) {
+  form {
+    width: 90%;
+    margin: 0 auto;
+  }
+  form input, form textarea, form select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  h1 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+}
+</style>
+
 <h1>{% if object %}リスト編集{% else %}新しいリストの作成{% endif %}</h1>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
