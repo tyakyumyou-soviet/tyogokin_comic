@@ -71,6 +71,7 @@
         </nav>
     </header>
 
+{% if user.is_authenticated %}
     <!-- 検索フォーム（ヘッダー下、二段目に中央寄せ） -->
     <div class="search-container">
         <form action="{% url 'search_comics' %}" method="get">
@@ -78,6 +79,7 @@
             <button type="submit" class="btn btn-search">検索</button>
         </form>
     </div>
+{% endif %}
 
     <!-- メッセージ表示 -->
     {% if messages %}
