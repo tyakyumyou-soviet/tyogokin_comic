@@ -21,7 +21,7 @@ def recommend_for_user(user, limit=10):
     # 1. ユーザーが多く閲覧している作品のタグを抽出する
     top_tags = Tag.objects.filter(comic__userhistory__user=user) \
                           .annotate(view_count=Count('comic__userhistory')) \
-                          .order_by('-view_count')[:5]
+                          .order_by('-view_count')[:10]
     if not top_tags.exists():
         # ユーザーの履歴がないor極端に少ない場合のfallback
         return Comic.objects.none()
