@@ -11,8 +11,6 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('login')  # 登録後、ログインページへリダイレクト
     template_name = 'accounts/signup.html'
 
-
-
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class MyLoginView(LoginView):
     template_name = 'accounts/login.html'
